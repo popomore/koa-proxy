@@ -16,6 +16,7 @@
     "coveralls": "~2.8.0",
     "istanbul-harmony": "*",
     "koa": "^0.5.2",
+    "koa-router": "^3.1.2",
     "koa-static": "^1.4.3",
     "mocha": "~1.17.1",
     "should": "~3.1.3",

@@ -6,6 +6,7 @@ var proxy = require('..');
 var request = require('supertest');
 var koa = require('koa');
 var serve = require('koa-static');
+var router = require('koa-router');
 
 describe('koa-proxy', function() {
 
@@ -21,7 +22,8 @@ describe('koa-proxy', function() {
 
   it('should have option url', function(done) {
     var app = koa();
-    app.use(proxy({
+    app.use(router(app));
+    app.get('/index.js', proxy({
       url: 'http://localhost:1234/class.js'
     }));
     var server = http.createServer(app.callback());
@@ -39,7 +41,12 @@ describe('koa-proxy', function() {
 
   it('should have option url and host', function(done) {
     var app = koa();
+    app.use(router(app));
     app.use(proxy({
+      host: 'http://localhost:1234',
+      url: 'class.js'
+    }));
+    app.get('/index.js', proxy({
       host: 'http://localhost:1234',
       url: 'class.js'
     }));
