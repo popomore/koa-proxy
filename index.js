@@ -20,7 +20,7 @@ module.exports = function(options) {
     }
 
     var opt = {
-      url: url,
+      url: url + '?' + this.querystring,
       header: this.header,
       encoding: null
     };
@@ -40,18 +40,22 @@ module.exports = function(options) {
 };
 
 
-function resolve (path, options) {
+function resolve(path, options) {
   var url = options.url;
   if (url) {
     if (!/^http/.test(url)) {
       url = options.host ? join(options.host, url) : null;
     }
-    return url;
+    return ignoreQuery(url);
   }
 
   if (options.map && options.map[path]) {
-    path = options.map[path];
+    path = ignoreQuery(options.map[path]);
   }
 
   return options.host ? join(options.host, path) : null;
+}
+
+function ignoreQuery(url) {
+  return url ? url.split('?')[0] : null;
 }

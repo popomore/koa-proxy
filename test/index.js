@@ -13,6 +13,13 @@ describe('koa-proxy', function() {
   var server;
   before(function() {
     var app = koa();
+    app.use(function* (next) {
+      if (this.querystring) {
+        this.body = this.querystring;
+        return;
+      }
+      yield* next;
+    });
     app.use(serve(__dirname + '/fixtures'));
     server = app.listen(1234);
   });
@@ -107,7 +114,7 @@ describe('koa-proxy', function() {
     app.use(proxy({
       url: 'class.js'
     }));
-    app.use(function*() {
+    app.use(function* () {
       this.body = 'next';
     });
     var server = http.createServer(app.callback());
@@ -130,7 +137,7 @@ describe('koa-proxy', function() {
         '/index.js': '/class.js'
       }
     }));
-    app.use(function*() {
+    app.use(function* () {
       this.body = 'next';
     });
     var server = http.createServer(app.callback());
@@ -167,6 +174,25 @@ describe('koa-proxy', function() {
         if (err)
           return done(err);
         res.text.should.startWith('<div>中国</div>');
+        done();
+      });
+  });
+
+  it('pass query', function(done) {
+    var app = koa();
+    app.use(proxy({
+      url: 'http://localhost:1234/class.js',
+      encoding: 'gbk'
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .get('/index.js?a=1')
+      .expect(200)
+      .expect('Content-Type', 'text/plain; charset=utf-8')
+      .end(function (err, res) {
+        if (err)
+          return done(err);
+        res.text.should.startWith('a=1');
         done();
       });
   });
