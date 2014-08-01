@@ -14,6 +14,12 @@ describe('koa-proxy', function() {
   before(function() {
     var app = koa();
     app.use(function* (next) {
+      if (this.path === '/error') {
+        this.body = '';
+        this.status = 500;
+        return;
+      }
+
       if (this.querystring) {
         this.body = this.querystring;
         return;
@@ -195,5 +201,16 @@ describe('koa-proxy', function() {
         res.text.should.startWith('a=1');
         done();
       });
+  });
+
+  it('statusCode', function(done) {
+    var app = koa();
+    app.use(proxy({
+      host: 'http://localhost:1234'
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .get('/error')
+      .expect(500, done);
   });
 });

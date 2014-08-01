@@ -26,6 +26,7 @@ module.exports = function(options) {
     };
     var res = yield request(opt);
 
+    this.status = res.statusCode;
     for (var name in res.headers) {
       this.set(name, res.headers[name]);
     }
