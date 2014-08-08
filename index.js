@@ -22,7 +22,9 @@ module.exports = function(options) {
     var opt = {
       url: url + '?' + this.querystring,
       headers: this.header,
-      encoding: null
+      encoding: null,
+      method: this.method,
+      body: this.request.body
     };
     var res = yield request(opt);
 
