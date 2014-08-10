@@ -2,7 +2,7 @@
 
 var join = require('url').resolve;
 var iconv = require('iconv-lite');
-var request = require('koa-request');
+var request = require('co-request').defaults({ jar: true });
 
 module.exports = function(options) {
   options || (options = {});
