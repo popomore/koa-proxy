@@ -19,12 +19,14 @@ module.exports = function(options) {
       return yield* next;
     }
 
+    var body = mungeBody(this.request.body, this.request.header['content-type']);
+
     var opt = {
       url: url + '?' + this.querystring,
       headers: this.header,
       encoding: null,
       method: this.method,
-      body: this.request.body
+      body: body
     };
     var res = yield request(opt);
 
@@ -61,4 +63,15 @@ function resolve(path, options) {
 
 function ignoreQuery(url) {
   return url ? url.split('?')[0] : null;
+}
+
+function mungeBody(body, contentType){
+  if (!Buffer.isBuffer(body) && typeof body !== 'string'){
+    if (contentType.indexOf('json') !== -1){
+      body = JSON.stringify(body);
+    } else {
+      body = body + ''; // coerce it to a string
+    }
+  }
+  return body;
 }
