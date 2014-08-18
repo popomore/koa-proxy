@@ -66,6 +66,9 @@ function ignoreQuery(url) {
 }
 
 function mungeBody(body, contentType){
+  if (body === undefined || body === null){
+    return body;
+  }
   if (!Buffer.isBuffer(body) && typeof body !== 'string'){
     if (contentType.indexOf('json') !== -1){
       body = JSON.stringify(body);
