@@ -2,6 +2,12 @@
 
 ---
 
+## 0.1.3
+
+- fix headers option
+- switch to co-request
+- pass request method and body to proxy
+
 ## 0.1.2
 
 return proxy's statusCode
