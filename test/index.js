@@ -223,8 +223,8 @@ describe('koa-proxy', function() {
       .end(function (err, res) {
         if (err)
           return done(err);
-        done();
         res.text.should.equal('{"foo":"bar"}');
+        done();
       });
   });
 
@@ -242,8 +242,8 @@ describe('koa-proxy', function() {
       .end(function (err, res) {
         if (err)
           return done(err);
-        done();
         res.text.should.equal('{"foo":"bar"}');
+        done();
       });
   });
 
