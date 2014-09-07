@@ -5,7 +5,8 @@
   "main": "index",
   "dependencies": {
     "iconv-lite": "^0.2.11",
-    "co-request": "^0.2.0"
+    "co-request": "^0.2.0",
+    "raw-body": "^1.3.0"
   },
   "keywords": [
     "koa",
