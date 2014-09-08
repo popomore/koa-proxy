@@ -3,6 +3,7 @@
 var join = require('url').resolve;
 var iconv = require('iconv-lite');
 var request = require('co-request').defaults({ jar: true });
+var getRawBody = require('raw-body');
 
 module.exports = function(options) {
   options || (options = {});
@@ -12,6 +13,7 @@ module.exports = function(options) {
   }
 
   return function* proxy(next) {
+    var body;
     var url = resolve(this.path, options);
 
     // don't match
@@ -19,12 +21,21 @@ module.exports = function(options) {
       return yield* next;
     }
 
+    // get raw request body
+    if (this.request.length) {
+      body = yield getRawBody(this.req, {
+        length: this.request.length,
+        limit: '1mb',
+        encoding: this.request.charset
+      });
+    }
+
     var opt = {
       url: url + '?' + this.querystring,
       headers: this.header,
       encoding: null,
       method: this.method,
-      body: this.request.body
+      body: body
     };
     var res = yield request(opt);
 

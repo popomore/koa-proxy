@@ -7,6 +7,7 @@ var request = require('supertest');
 var koa = require('koa');
 var serve = require('koa-static');
 var router = require('koa-router');
+var getRawBody = require('raw-body');
 
 describe('koa-proxy', function() {
 
@@ -213,4 +214,37 @@ describe('koa-proxy', function() {
       .get('/error')
       .expect(500, done);
   });
+
+  it('should proxy requst body', function(done) {
+    var destApp = koa();
+    destApp.on('error', done);
+
+    // destination app receives proxied request
+    // assert that request body matches original request body
+    destApp.use(function* (next) {
+      var body = yield getRawBody(this.req, {
+        length: this.request.length,
+        limit: '1mb',
+        encoding: this.request.charset
+      });
+
+      body.toString().should.equal('some body content');
+      done();
+    });
+
+    destApp.listen(1235);
+
+    var app = koa();
+    app.use(proxy({
+      host: 'http://localhost:1235'
+    }));
+
+    request(app.listen())
+      .post('/')
+      .send('some body content')
+      .end(function(err, res) {
+        if (err) return done(err);
+      });
+  });
+
 });
