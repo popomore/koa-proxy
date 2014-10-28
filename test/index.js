@@ -7,6 +7,7 @@ var request = require('supertest');
 var koa = require('koa');
 var serve = require('koa-static');
 var router = require('koa-router');
+var parser = require('koa-body-parser');
 
 describe('koa-proxy', function() {
 
@@ -17,6 +18,12 @@ describe('koa-proxy', function() {
       if (this.path === '/error') {
         this.body = '';
         this.status = 500;
+        return;
+      }
+      if (this.path === '/postme') {
+        this.body = this.req;
+        this.set('content-type', this.request.header['content-type']);
+        this.status = 200;
         return;
       }
 
@@ -199,6 +206,43 @@ describe('koa-proxy', function() {
         if (err)
           return done(err);
         res.text.should.startWith('a=1');
+        done();
+      });
+  });
+
+  it('pass request body', function(done) {
+    var app = koa();
+    app.use(proxy({
+      host: 'http://localhost:1234',
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .post('/postme')
+      .send({foo:'bar'})
+      .expect(200)
+      .end(function (err, res) {
+        if (err)
+          return done(err);
+        res.text.should.equal('{"foo":"bar"}');
+        done();
+      });
+  });
+
+  it('pass parsed request body', function(done) {
+    var app = koa();
+    app.use(parser()); // sets this.request.body
+    app.use(proxy({
+      host: 'http://localhost:1234',
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .post('/postme')
+      .send({foo:'bar'})
+      .expect(200)
+      .end(function (err, res) {
+        if (err)
+          return done(err);
+        res.text.should.equal('{"foo":"bar"}');
         done();
       });
   });
