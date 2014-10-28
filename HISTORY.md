@@ -2,6 +2,10 @@
 
 ---
 
+## 0.2.0
+
+Munge body object to JSON when appropriate
+
 ## 0.1.3
 
 - fix headers option
