@@ -43,6 +43,24 @@ app.get('index.js', proxy({
 }));
 ```
 
-## LISENCE
+You can specify match criteria to restrict proxy calls to a given path.
+
+```
+app.use(proxy({
+  host:  'http://alicdn.com', // proxy alicdn.com...
+  match: /^\/static\//        // ...just the /static folder
+}));
+```
+
+Or you can use match to exclude a specific path.
+
+```
+app.use(proxy({
+  host:  'http://alicdn.com',     // proxy alicdn.com...
+  match: /^(?!\/dontproxy\.html)/ // ...everything except /dontproxy.html
+}));
+```
+
+## LICENSE
 
 Copyright (c) 2014 popomore. Licensed under the MIT license.
