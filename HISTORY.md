@@ -2,6 +2,10 @@
 
 ---
 
+## 0.3.0
+
+Add `host` and `match` option
+
 ## 0.2.0
 
 Munge body object to JSON when appropriate
