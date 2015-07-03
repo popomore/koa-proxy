@@ -19,6 +19,13 @@ module.exports = function(options) {
       return yield* next;
     }
 
+    // if match option supplied, restrict proxy to that match
+    if (options.match) {
+      if (!this.path.match(options.match)) {
+        return yield* next;
+      }
+    }
+
     var parsedBody = getParsedBody(this);
 
     var opt = {
@@ -28,6 +35,8 @@ module.exports = function(options) {
       method: this.method,
       body: parsedBody
     };
+    // set 'Host' header to options.host (without protocol prefix)
+    if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3)
 
     var requestThunk = request(opt);
 
