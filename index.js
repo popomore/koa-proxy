@@ -72,8 +72,12 @@ function resolve(path, options) {
     return ignoreQuery(url);
   }
 
-  if (options.map && options.map[path]) {
-    path = ignoreQuery(options.map[path]);
+  if (typeof options.map === 'object') {
+    if (options.map && options.map[path]) {
+      path = ignoreQuery(options.map[path]);
+    }
+  } else if (typeof options.map === 'function') {
+    path = options.map(path);
   }
 
   return options.host ? join(options.host, path) : null;
