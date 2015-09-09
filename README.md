@@ -43,6 +43,15 @@ app.get('index.js', proxy({
 }));
 ```
 
+You can specify a function that can map your request's path to the desired destination.
+
+```
+app.get('index.js', proxy({
+  host: 'http://alicdn.com',
+  map: function(path) { return 'public/' + path; }
+}));
+```
+
 You can specify match criteria to restrict proxy calls to a given path.
 
 ```
