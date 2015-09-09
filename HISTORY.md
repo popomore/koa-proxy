@@ -1,6 +1,8 @@
-# History
 
----
+0.4.0 / 2015-09-09
+==================
+
+  * added ability to have map as a function rather than an object
 
 ## 0.3.0
 
