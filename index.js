@@ -94,7 +94,7 @@ function getParsedBody(ctx){
   }
   var contentType = ctx.request.header['content-type'];
   if (!Buffer.isBuffer(body) && typeof body !== 'string'){
-    if (contentType.indexOf('json') !== -1){
+    if (contentType && contentType.indexOf('json') !== -1){
       body = JSON.stringify(body);
     } else {
       body = body + '';
