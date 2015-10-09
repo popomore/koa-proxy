@@ -1,4 +1,9 @@
 
+0.4.1 / 2015-10-09
+==================
+
+  * check contentType is defined before calling indexOf (fixes bug when used in conjunction with koa-bodyparser)
+
 0.4.0 / 2015-09-09
 ==================
 

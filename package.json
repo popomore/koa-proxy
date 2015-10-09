@@ -1,6 +1,6 @@
 {
   "name": "koa-proxy",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Proxy middleware for koa",
   "main": "index",
   "dependencies": {
