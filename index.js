@@ -35,8 +35,8 @@ module.exports = function(options) {
       method: this.method,
       body: parsedBody
     };
-    // set 'Host' header to options.host (without protocol prefix)
-    if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3)
+    // set 'Host' header to options.host (without protocol prefix), strip trailing slash
+    if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3).replace(/\/$/,"");
 
     var requestThunk = request(opt);
 
