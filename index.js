@@ -39,7 +39,7 @@ module.exports = function(options) {
     if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3)
 
     if (options.requestOptions) {
-      Object.keys(options.requestOptions).forEach(function (option) { opt[option] = options[option]; });
+      Object.keys(options.requestOptions).forEach(function (option) { opt[option] = options.requestOptions[option]; });
     }
 
     var requestThunk = request(opt);
