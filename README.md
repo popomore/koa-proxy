@@ -70,6 +70,15 @@ app.use(proxy({
 }));
 ```
 
+You can turn on logging for the requests that are about to be proxied. This outputs the request details of the request going to the proxy target.
+
+```
+app.use(proxy({
+  host:  'http://alicdn.com',     // proxy alicdn.com...
+  log: true // turn logging on
+}));
+```
+
 ## LICENSE
 
 Copyright (c) 2014 popomore. Licensed under the MIT license.
