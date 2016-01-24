@@ -35,6 +35,10 @@ module.exports = function(options) {
       method: this.method,
       body: parsedBody
     };
+    // Log outgoing requests
+    if(options.log) {
+      console.log('proxying request: ', opt);
+    }
     // set 'Host' header to options.host (without protocol prefix)
     if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3)
 
