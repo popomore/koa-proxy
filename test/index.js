@@ -15,6 +15,8 @@ describe('koa-proxy', function() {
   before(function() {
     var app = koa();
     app.use(function* (next) {
+      // Set this in response header to allow for proxy request header testing
+      this.set('host', this.request.header.host);
       if (this.path === '/error') {
         this.body = '';
         this.status = 500;
@@ -93,6 +95,24 @@ describe('koa-proxy', function() {
       .get('/class.js')
       .expect(200)
       .expect('Content-Type', /javascript/)
+      .end(function (err, res) {
+        if (err)
+          return done(err);
+        res.text.should.startWith('define("arale/class/1.0.0/class"');
+        done();
+      });
+  });
+
+  it('should strip trailing slash from option host', function(done) {
+    var app = koa();
+    app.use(proxy({
+      host: 'http://localhost:1234/'
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .get('/class.js')
+      .expect(200)
+      .expect('Host', 'localhost:1234')
       .end(function (err, res) {
         if (err)
           return done(err);
