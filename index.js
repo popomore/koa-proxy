@@ -2,10 +2,11 @@
 
 var join = require('url').resolve;
 var iconv = require('iconv-lite');
-var request = require('co-request').defaults({ jar: true });
+var coRequest = require('co-request');
 
 module.exports = function(options) {
   options || (options = {});
+  var request = coRequest.defaults({ jar: options.jar || true });
 
   if (!(options.host || options.map || options.url)) {
     throw new Error('miss options');
