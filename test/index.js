@@ -410,6 +410,13 @@ describe('koa-proxy', function() {
         });
     });
 
+    it('should retain cookies', function(done) {
+      agent
+        .get('/check-cookie')
+        .expect(200)
+        .expect('nom-nom', done);
+    });
+
     it('should not retain cleared cookies', function(done) {
       var req = agent
         .get('/check-cookie');
