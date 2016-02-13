@@ -28,6 +28,16 @@ describe('koa-proxy', function() {
         this.status = 200;
         return;
       }
+      if (this.path === '/cookie-me') {
+        this.cookies.set('test_cookie', 'nom-nom', { httpOnly: false });
+        this.status = 200;
+        return;
+      }
+      if (this.path === '/check-cookie') {
+        this.body = this.cookies.get('test_cookie');
+        this.status = 200;
+        return;
+      }
 
       if (this.querystring) {
         this.body = this.querystring;
@@ -335,4 +345,85 @@ describe('koa-proxy', function() {
       })
       .expect(500, done);
   });
+
+  describe('with cookie jar', function () {
+
+    var app = koa();
+    app.use(router(app));
+    app.use(proxy({
+      host: 'http://localhost:1234',
+      jar: true
+    }));
+    var server = http.createServer(app.callback());
+    var agent = request.agent(server);
+
+    it('should set cookies', function(done) {
+      agent
+        .get('/cookie-me')
+        .expect(200)
+        .expect('set-cookie', 'test_cookie=nom-nom; path=/')
+        .end(function (err, res) {
+          if (err)
+            return done(err);
+          done();
+        });
+    });
+
+    it('should retain cookies', function(done) {
+      agent
+        .get('/check-cookie')
+        .expect(200)
+        .expect('nom-nom', done);
+    });
+
+    it('should retain cleared cookies', function(done) {
+      var req = agent
+        .get('/check-cookie');
+      req.cookies = '';
+      req
+        .expect(200)
+        .expect('nom-nom', done);
+    });
+
+  });
+
+  describe('without cookie jar', function () {
+
+    var app = koa();
+    app.use(router(app));
+    app.use(proxy({
+      host: 'http://localhost:1234',
+      jar: false
+    }));
+    var server = http.createServer(app.callback());
+    var agent = request.agent(server);
+
+    it('should set cookies', function(done) {
+      agent
+        .get('/cookie-me')
+        .expect(200)
+        .expect('set-cookie', 'test_cookie=nom-nom; path=/')
+        .end(function (err, res) {
+          if (err)
+            return done(err);
+          done();
+        });
+    });
+
+    it('should not retain cleared cookies', function(done) {
+      var req = agent
+        .get('/check-cookie');
+      req.cookies = '';
+      req
+        .expect(200)
+        .end(function (err, res) {
+          if (err)
+            return done(err);
+          res.text.should.not.equal('nom-nom');
+          done();
+        });
+    });
+
+  });
+
 });
