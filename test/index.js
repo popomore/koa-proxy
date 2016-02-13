@@ -14,6 +14,7 @@ describe('koa-proxy', function() {
   var server;
   before(function() {
     var app = koa();
+    app.use(parser()); // sets this.request.body
     app.use(function* (next) {
       // Set this in response header to allow for proxy request header testing
       this.set('host', this.request.header.host);
@@ -23,7 +24,7 @@ describe('koa-proxy', function() {
         return;
       }
       if (this.path === '/postme') {
-        this.body = this.req;
+        this.body = this.request.body;
         this.set('content-type', this.request.header['content-type']);
         this.status = 200;
         return;
@@ -301,7 +302,6 @@ describe('koa-proxy', function() {
 
   it('pass parsed request body', function(done) {
     var app = koa();
-    app.use(parser()); // sets this.request.body
     app.use(proxy({
       host: 'http://localhost:1234',
     }));
