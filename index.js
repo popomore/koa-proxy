@@ -54,6 +54,10 @@ module.exports = function(options) {
 
     this.status = res.statusCode;
     for (var name in res.headers) {
+      // http://stackoverflow.com/questions/35525715/http-get-parse-error-code-hpe-unexpected-content-length
+      if (name === 'transfer-encoding') {
+        continue;
+      }
       this.set(name, res.headers[name]);
     }
 
