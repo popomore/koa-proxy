@@ -1,4 +1,12 @@
 
+0.5.0 / 2016-02-24
+==================
+
+  * Exposing the cookie jar to the options interface
+  * fix: should not return Transfer-encoding header
+  * Added support for requestOptions to be passed as options to the underlying request
+  * strip trailing slash from headers.host
+
 0.4.1 / 2015-10-09
 ==================
 
