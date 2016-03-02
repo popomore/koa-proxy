@@ -346,6 +346,23 @@ describe('koa-proxy', function() {
       .expect(500, done);
   });
 
+  it('should pass along requestOptions when function', function(done) {
+    var app = koa();
+    app.use(proxy({
+      url: 'http://localhost:1234/class.js',
+      requestOptions: { timeout: function(req, opt) { return 1; } }
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .get('/index.js')
+      .expect(function sleep() {
+        // Using the custom assert function to make sure we get a timeout
+        var sleepTime = new Date().getTime() + 3;
+        while(new Date().getTime() < sleepTime) {}
+      })
+      .expect(500, done);
+  });
+
   describe('with cookie jar', function () {
 
     var app = koa();

@@ -30,17 +30,28 @@ module.exports = function(options) {
     var parsedBody = getParsedBody(this);
 
     var opt = {
-      url: url + '?' + this.querystring,
+      url: url + (this.querystring ? '?' + this.querystring : ''),
       headers: this.header,
       encoding: null,
       method: this.method,
       body: parsedBody
     };
+
     // set 'Host' header to options.host (without protocol prefix), strip trailing slash
     if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3).replace(/\/$/,'');
 
     if (options.requestOptions) {
-      Object.keys(options.requestOptions).forEach(function (option) { opt[option] = options.requestOptions[option]; });
+      var ctx = this;
+
+      Object.keys(options.requestOptions).forEach(function (optionName) {
+        const optionValue = options.requestOptions[optionName];
+
+        if (typeof optionValue === 'function') {
+          opt[optionName] = optionValue(ctx.request, opt);
+        } else {
+          opt[optionName] = optionValue;
+        }
+      });
     }
 
     var requestThunk = request(opt);
