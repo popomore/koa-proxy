@@ -44,7 +44,7 @@ module.exports = function(options) {
       var ctx = this;
 
       Object.keys(options.requestOptions).forEach(function (optionName) {
-        const optionValue = options.requestOptions[optionName];
+        var optionValue = options.requestOptions[optionName];
 
         if (typeof optionValue === 'function') {
           opt[optionName] = optionValue(ctx.request, opt);
@@ -53,7 +53,6 @@ module.exports = function(options) {
         }
       });
     }
-
     var requestThunk = request(opt);
 
     if (parsedBody) {
