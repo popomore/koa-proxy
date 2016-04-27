@@ -41,18 +41,13 @@ module.exports = function(options) {
     if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3).replace(/\/$/,'');
 
     if (options.requestOptions) {
-      var ctx = this;
-
-      Object.keys(options.requestOptions).forEach(function (optionName) {
-        var optionValue = options.requestOptions[optionName];
-
-        if (typeof optionValue === 'function') {
-          opt[optionName] = optionValue(ctx.request, opt);
-        } else {
-          opt[optionName] = optionValue;
-        }
-      });
+      if (typeof options.requestOptions === 'function') {
+        opt = options.requestOptions(this.request, opt);
+      } else {
+        Object.keys(options.requestOptions).forEach(function (option) { opt[option] = options.requestOptions[option]; });
+      }
     }
+
     var requestThunk = request(opt);
 
     if (parsedBody) {

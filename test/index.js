@@ -350,7 +350,10 @@ describe('koa-proxy', function() {
     var app = koa();
     app.use(proxy({
       url: 'http://localhost:1234/class.js',
-      requestOptions: { timeout: function(req, opt) { return 1; } }
+      requestOptions: function(req, opt) {
+        opt.timeout = 1;
+        return opt;
+      }
     }));
     var server = http.createServer(app.callback());
     request(server)
