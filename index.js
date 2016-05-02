@@ -34,7 +34,8 @@ module.exports = function(options) {
       headers: this.header,
       encoding: null,
       method: this.method,
-      body: parsedBody
+      body: parsedBody,
+      followRedirect: options.followRedirect || true
     };
 
     // set 'Host' header to options.host (without protocol prefix), strip trailing slash
