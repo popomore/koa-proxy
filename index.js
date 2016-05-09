@@ -38,17 +38,17 @@ module.exports = function(options) {
       followRedirect: options.followRedirect || true
     };
 
-    // set 'Host' header to options.host (without protocol prefix), strip trailing slash
-    if (!options.preserveHost) {
-      if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3).replace(/\/$/,'');
-    }
-
     if (options.requestOptions) {
       if (typeof options.requestOptions === 'function') {
         opt = options.requestOptions(this.request, opt);
       } else {
         Object.keys(options.requestOptions).forEach(function (option) { opt[option] = options.requestOptions[option]; });
       }
+    }
+
+    // set 'Host' header to options.host (without protocol prefix), strip trailing slash
+    if (!options.preserveHost) {
+      if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3).replace(/\/$/,'');
     }
 
     var requestThunk = request(opt);
