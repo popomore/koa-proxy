@@ -7,7 +7,7 @@ Proxy middleware for koa
 ## Install
 
 ```
-$ npm install koa-proxy -g
+$ npm install koa-proxy -S
 ```
 
 ## Usage
