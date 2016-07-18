@@ -33,6 +33,7 @@ module.exports = function(options) {
       url: url + (this.querystring ? '?' + this.querystring : ''),
       headers: this.header,
       encoding: null,
+      followRedirect: options.followRedirect || false,
       method: this.method,
       body: parsedBody
     };
