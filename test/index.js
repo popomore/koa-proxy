@@ -38,6 +38,10 @@ describe('koa-proxy', function() {
         this.status = 200;
         return;
       }
+      if (this.path === '/redirect') {
+        this.redirect('http://google.com');
+        return;
+      }
 
       if (this.querystring) {
         this.body = this.querystring;
@@ -189,6 +193,24 @@ describe('koa-proxy', function() {
         if (err)
           return done(err);
         res.text.should.startWith('define("arale/class/1.0.0/class"');
+        done();
+      });
+  });
+
+  it('should have option followRedirect', function(done) {
+    var app = koa();
+    app.use(proxy({
+      host: 'http://localhost:1234',
+      followRedirect: false,
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .get('/redirect')
+      .expect(302)
+      .expect('Location', /google.com/)
+      .end(function (err, res) {
+        if (err)
+          return done(err);
         done();
       });
   });
