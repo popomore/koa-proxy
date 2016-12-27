@@ -1,4 +1,10 @@
 
+0.7.0 / 2016-12-27
+==================
+
+  * Add option to enable/disable following redirects (#45)
+  * surely most people would want to install this as regular dependency, not as global one (#36)
+
 0.6.0 / 2016-04-28
 ==================
 
