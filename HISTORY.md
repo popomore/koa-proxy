@@ -1,4 +1,10 @@
 
+0.8.0 / 2017-02-03
+==================
+
+  * feat: [BREAKING_CHANGE] set jar = false by default (#48)
+  * feat: add a yieldNext option (#47)
+
 0.7.0 / 2016-12-27
 ==================
 
