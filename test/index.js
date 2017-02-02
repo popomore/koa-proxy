@@ -455,7 +455,6 @@ describe('koa-proxy', function() {
     app.use(router(app));
     app.use(proxy({
       host: 'http://localhost:1234',
-      jar: false
     }));
     var server = http.createServer(app.callback());
     var agent = request.agent(server);
