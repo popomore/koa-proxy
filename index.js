@@ -6,7 +6,7 @@ var coRequest = require('co-request');
 
 module.exports = function(options) {
   options || (options = {});
-  var request = coRequest.defaults({ jar: typeof options.jar === 'undefined' ? true : options.jar });
+  var request = coRequest.defaults({ jar: options.jar === true });
 
   if (!(options.host || options.map || options.url)) {
     throw new Error('miss options');
@@ -35,7 +35,7 @@ module.exports = function(options) {
       encoding: null,
       followRedirect: options.followRedirect === false ? false : true,
       method: this.method,
-      body: parsedBody
+      body: parsedBody,
     };
 
     // set 'Host' header to options.host (without protocol prefix), strip trailing slash
