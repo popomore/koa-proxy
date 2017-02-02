@@ -35,11 +35,9 @@ module.exports = function(options) {
       encoding: null,
       followRedirect: options.followRedirect === false ? false : true,
       method: this.method,
-      body: parsedBody
+      body: parsedBody,
+      followRedirect: options.followRedirect || true
     };
-
-    // set 'Host' header to options.host (without protocol prefix), strip trailing slash
-    if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3).replace(/\/$/,'');
 
     if (options.requestOptions) {
       if (typeof options.requestOptions === 'function') {
@@ -47,6 +45,11 @@ module.exports = function(options) {
       } else {
         Object.keys(options.requestOptions).forEach(function (option) { opt[option] = options.requestOptions[option]; });
       }
+    }
+
+    // set 'Host' header to options.host (without protocol prefix), strip trailing slash
+    if (!options.preserveHost) {
+      if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3).replace(/\/$/,'');
     }
 
     var requestThunk = request(opt);
