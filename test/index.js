@@ -215,6 +215,26 @@ describe('koa-proxy', function() {
       });
   });
 
+  it('should have option yieldNext', function(done) {
+    var app = koa();
+    app.use(proxy({
+      host: 'http://localhost:1234/',
+      yieldNext: true,
+    }));
+    app.use(function* () {
+      done();
+    })
+    var server = http.createServer(app.callback());
+    request(server)
+      .get('/class.js')
+      .expect(200)
+      .expect('Host', 'localhost:1234')
+      .end(function (err, res) {
+        if (err)
+          return done(err);
+      });
+  });
+
   it('url not match for url', function(done) {
     var app = koa();
     app.use(proxy({

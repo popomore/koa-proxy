@@ -74,6 +74,10 @@ module.exports = function(options) {
     }
 
     this.body = res.body;
+
+    if (options.yieldNext) {
+      yield next;
+    }
   };
 };
 
