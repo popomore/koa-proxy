@@ -493,5 +493,27 @@ describe('koa-proxy', function() {
     });
 
   });
-
+  describe('configurable headers function', function () {
+    it('should call setHeaderOptions function when provided', function(done) {
+     function setHeaders(name, header) {
+        if (name === 'host')
+          return 'http://localhost:12345';
+        return header;
+      }
+      var app = koa();
+      app.use(proxy({
+        host: 'http://localhost:1234',
+        setHeaderOptions: setHeaders
+      }));
+      var server = http.createServer(app.callback());
+      request(server)
+        .get('/index.js')
+        .end(function(err, res) {
+          if (err)
+            return done(err);
+          res.headers.host.should.equal('http://localhost:12345');
+          done();
+        });
+    });
+  });
 });
