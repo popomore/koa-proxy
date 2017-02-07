@@ -28,7 +28,8 @@ You can proxy a specified url.
 
 ```js
 app.get('index.js', proxy({
-  url: 'http://alicdn.com/index.js'
+  host: 'http://alicdn.com',
+  url: '/index.js'
 }));
 ```
 
