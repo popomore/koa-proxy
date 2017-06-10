@@ -4,8 +4,11 @@
   "description": "Proxy middleware for koa",
   "main": "index",
   "dependencies": {
+    "async-request": "^1.2.0",
+    "co-request": "^0.2.0",
     "iconv-lite": "^0.2.11",
-    "co-request": "^0.2.0"
+    "koa-bodyparser": "^4.2.0",
+    "lodash": "^4.17.4",
   },
   "keywords": [
     "koa",
@@ -15,9 +18,9 @@
   "devDependencies": {
     "coveralls": "~2.8.0",
     "istanbul-harmony": "*",
-    "koa": "^0.5.2",
+    "koa": "2.0.0",
     "koa-body-parser": "^1.1.2",
-    "koa-router": "^3.1.2",
+    "koa-router": "7.0.0",
     "koa-static": "^1.4.3",
     "mocha": "~1.17.1",
     "should": "~3.1.3",

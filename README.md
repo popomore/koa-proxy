@@ -1,83 +1,60 @@
-# koa-proxy [![Build Status](https://travis-ci.org/popomore/koa-proxy.png?branch=master)](https://travis-ci.org/popomore/koa-proxy) [![Coverage Status](https://coveralls.io/repos/popomore/koa-proxy/badge.png?branch=master)](https://coveralls.io/r/popomore/koa-proxy?branch=master)
+# koa-proxy 
 
-Proxy middleware for koa
+try to rebuild koa-proxy in  koa v2 ,but have some trouble  
 
----
+and overwrite the test case in koa2
 
-## Install
+process and problem :
 
-```
-$ npm install koa-proxy -S
-```
+### 5 error
+ 
+### koa-proxy should have option url:
+ 
+ ```
+ Error: expected "Content-Type" matching /javascript/, got "text/plain; charset=utf-8"
+ //the problem of type  , work well in bowser
+ ```
+### koa-proxy pass request body
+ 
+ ```
+ Uncaught AssertionError: expected '' to be '{"foo":"bar"}'
+      + expected - actual
 
-## Usage
+      +"{\"foo\":\"bar\"}"
+      -""
+//in postman is long time did not response
+ ```
+### koa-proxy pass parsed request body:
+ 
+ ```
+   Error: Parse Error //same problem as well as before case
+ ```
 
-When you request http://localhost:3000/index.js, it will fetch http://alicdn.com/index.js and return.
+### koa-proxy should pass along requestOptions: 
 
-```js
-var koa = require('koa');
-var proxy = require('koa-proxy');
-var app = koa();
-app.use(proxy({
-  host: 'http://alicdn.com'
-}));
-app.listen(3000);
-```
+ ```
+   Uncaught Error: Error: ETIMEDOUT
+ ```
+ 
+### koa-proxy should pass along requestOptions when function:
 
-You can proxy a specified url.
+ ```
+   Uncaught Error: Error: ETIMEDOUT
+ ```
 
-```js
-app.get('index.js', proxy({
-  url: 'http://alicdn.com/index.js'
-}));
-```
 
-You can specify a key/value object that can map your request's path to the other.
+### change
 
-```js
-app.get('index.js', proxy({
-  host: 'http://alicdn.com',
-  map: {
-    'index.js': 'index-1.js'
-  }
-}));
-```
+use async-request install of co-request 
 
-You can specify a function that can map your request's path to the desired destination.
 
-```js
-app.get('index.js', proxy({
-  host: 'http://alicdn.com',
-  map: function(path) { return 'public/' + path; }
-}));
-```
+add app.js file to test 
+ 
 
-You can specify match criteria to restrict proxy calls to a given path.
 
-```js
-app.use(proxy({
-  host:  'http://alicdn.com', // proxy alicdn.com...
-  match: /^\/static\//        // ...just the /static folder
-}));
-```
 
-Or you can use match to exclude a specific path.
+## MIT
 
-```js
-app.use(proxy({
-  host:  'http://alicdn.com',     // proxy alicdn.com...
-  match: /^(?!\/dontproxy\.html)/ // ...everything except /dontproxy.html
-}));
-```
+.
 
-Proxy won't send cookie to real server, you can set `jar = true` to send it.
 
-```js
-app.use(proxy({
-  jar: true,
-}));
-```
-
-## LICENSE
-
-Copyright (c) 2014 popomore. Licensed under the MIT license.
