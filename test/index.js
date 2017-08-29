@@ -42,7 +42,13 @@ describe('koa-proxy', function() {
         this.redirect('http://google.com');
         return;
       }
-
+      if (this.path === '/suppress-my-headers') {
+        var headers = this.request.header;
+        this.set('jar-jar', 'binks');
+        this.body = headers;
+        this.status = 200;
+        return;
+      }
       if (this.querystring) {
         this.body = this.querystring;
         return;
@@ -491,7 +497,37 @@ describe('koa-proxy', function() {
           done();
         });
     });
-
   });
 
+  describe('with suppressed request and response headers', function () {
+
+    var app = koa();
+    app.use(router(app));
+    app.use(proxy({
+      host: 'http://localhost:1234',
+      suppressRequestHeaders: ['foO','bAr'],
+      suppressResponseHeaders: ['jaR-Jar']
+    }));
+    var server = http.createServer(app.callback());
+    var agent = request.agent(server);
+
+    it('should remove headers', function(done) {
+      agent
+        .get('/suppress-my-headers')
+        .set('foo', 'kung')
+        .set('bar', 'none')
+        .set('happy', 'path')
+        .expect(200)
+        .expect(function(res){
+          if(res.headers['jar-jar']) throw new Error("jar-jar header was present");
+          if(res.body['foo']) throw new Error("foo header was present");
+          if(res.body['bar']) throw new Error("bar header was present");
+        })
+        .end(function (err, res) {
+          if (err)
+            return done(err);
+          done();
+        });
+    });
+  });
 });
