@@ -78,6 +78,15 @@ app.use(proxy({
 }));
 ```
 
+Proxy won't send 'foo' and 'bar' headers to real server, or recieve 'jar-jar' from real server.
+
+```js
+app.use(proxy({
+  suppressRequestHeaders: ['foo','bar'], // case-insensitive
+  suppressResponseHeaders: ['jar-jar'] // case-insensitive
+}));
+```
+
 ## LICENSE
 
 Copyright (c) 2014 popomore. Licensed under the MIT license.

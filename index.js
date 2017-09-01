@@ -15,6 +15,19 @@ module.exports = function(options) {
   return function* proxy(next) {
     var url = resolve(this.path, options);
 
+    if(typeof options.suppressRequestHeaders === 'object'){
+      options.suppressRequestHeaders.forEach(function(h, i){
+        options.suppressRequestHeaders[i] = h.toLowerCase();
+      });
+    }
+
+    var suppressResponseHeaders = [];  // We should not be overwriting the options object!
+    if(typeof options.suppressResponseHeaders === 'object'){
+      options.suppressResponseHeaders.forEach(function(h, i){
+        suppressResponseHeaders.push(h.toLowerCase());
+      });
+    }
+
     // don't match
     if (!url) {
       return yield* next;
@@ -26,7 +39,7 @@ module.exports = function(options) {
         return yield* next;
       }
     }
-
+    
     var parsedBody = getParsedBody(this);
 
     var opt = {
@@ -49,6 +62,12 @@ module.exports = function(options) {
       }
     }
 
+    for(name in opt.headers){
+      if(options.suppressRequestHeaders && options.suppressRequestHeaders.indexOf(name.toLowerCase()) >= 0){
+        delete opt.headers[name];
+      }
+    }
+
     var requestThunk = request(opt);
 
     if (parsedBody) {
@@ -62,6 +81,9 @@ module.exports = function(options) {
     this.status = res.statusCode;
     for (var name in res.headers) {
       // http://stackoverflow.com/questions/35525715/http-get-parse-error-code-hpe-unexpected-content-length
+      if(suppressResponseHeaders.indexOf(name.toLowerCase())>=0){
+        continue;
+      }
       if (name === 'transfer-encoding') {
         continue;
       }
