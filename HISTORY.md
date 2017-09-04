@@ -1,4 +1,9 @@
 
+0.9.0 / 2017-09-04
+==================
+
+  * Added suppressRequestHeaders and suppressResponseHeaders options (#54)
+
 0.8.0 / 2017-02-03
 ==================
 
