@@ -13,7 +13,12 @@ module.exports = function(options) {
   }
 
   return function* proxy(next) {
-    var url = resolve(this.path, options);
+    var host = options.host;
+    if (typeof options.host === 'function') {
+      host = options.host(this.request);
+    }
+
+    var url = resolve(host, this.path, options);
 
     if(typeof options.suppressRequestHeaders === 'object'){
       options.suppressRequestHeaders.forEach(function(h, i){
@@ -39,7 +44,7 @@ module.exports = function(options) {
         return yield* next;
       }
     }
-    
+
     var parsedBody = getParsedBody(this);
 
     var opt = {
@@ -51,8 +56,8 @@ module.exports = function(options) {
       body: parsedBody,
     };
 
-    // set 'Host' header to options.host (without protocol prefix), strip trailing slash
-    if (options.host) opt.headers.host = options.host.slice(options.host.indexOf('://')+3).replace(/\/$/,'');
+    // set 'Host' header to host (without protocol prefix), strip trailing slash
+    if (host) opt.headers.host = host.slice(host.indexOf('://')+3).replace(/\/$/,'');
 
     if (options.requestOptions) {
       if (typeof options.requestOptions === 'function') {
@@ -104,11 +109,11 @@ module.exports = function(options) {
 };
 
 
-function resolve(path, options) {
+function resolve(host, path, options) {
   var url = options.url;
   if (url) {
     if (!/^http/.test(url)) {
-      url = options.host ? join(options.host, url) : null;
+      url = host ? join(host, url) : null;
     }
     return ignoreQuery(url);
   }
@@ -121,7 +126,7 @@ function resolve(path, options) {
     path = options.map(path);
   }
 
-  return options.host ? join(options.host, path) : null;
+  return host ? join(host, path) : null;
 }
 
 function ignoreQuery(url) {
