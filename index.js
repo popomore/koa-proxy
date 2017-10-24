@@ -81,18 +81,10 @@ module.exports = function(options) {
       }
     }
 
-    if (parsedBody) {
+    if (parsedBody || ctx.method === 'GET') {
       var res = await rp(opt);
     } else {
-      const bodyStream = pauseStream().pause();
-      var res = await pipe(ctx.req, requestLib(opt), bodyStream, {
-        end: false
-      });
-
-      // Ensure that the body stream is only resumed after Koa had the chance to pipe it
-      // through to the response.
-      ctx.body = bodyStream;
-      process.nextTick(() => bodyStream.resume());
+      var res = await pipe(ctx.req, opt);
     }
 
     for (var name in res.headers) {
@@ -161,15 +153,13 @@ function getParsedBody(ctx) {
 }
 
 /**
- * Pipes the incoming request body through request(), and subsequently pipes
- * the response stream of request() through to the bodyStream.
+ * Pipes the incoming request body through request()
  */
-function pipe(incomingRequest, requestThunk, bodyStream, options) {
+function pipe(incomingRequest, opt) {
   return new Promise((resolve, reject) => {
-    incomingRequest
-      .pipe(requestThunk)
-      .on('error', reject)
-      .on('response', resolve)
-      .pipe(bodyStream, options);
+    incomingRequest.pipe(requestLib(opt, (error, response) => {
+      if (error) return reject(error);
+      resolve(response);
+    }))
   });
 }
