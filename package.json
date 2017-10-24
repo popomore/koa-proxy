@@ -18,7 +18,7 @@
     "coveralls": "~2.8.0",
     "istanbul": "^1.1.0-alpha.1",
     "koa": "^2.3.0",
-    "koa-body-parser": "^1.1.2",
+    "koa-body": "^2.5.0",
     "koa-convert": "^1.2.0",
     "koa-router": "^7.2.1",
     "koa-static": "^4.0.1",

@@ -2,20 +2,22 @@
 
 require('should');
 var http = require('http');
+var path = require('path');
+var fs = require('fs');
 var proxy = require('..');
 var request = require('supertest');
 var Koa = require('koa');
 var serve = require('koa-static');
 var convert = require('koa-convert')
 var Router = require('koa-router');
-var parser = require('koa-body-parser');
+var parser = require('koa-body');
 
 describe('koa-proxy', function() {
 
   var server;
   before(function() {
     var app = new Koa();
-    app.use(convert(parser()));
+    app.use(parser({ multipart: true }));
     app.use(async (ctx, next) => {
       // Set this in response header to allow for proxy request header testing
       ctx.set('host', ctx.request.header.host);
@@ -26,6 +28,14 @@ describe('koa-proxy', function() {
       if (ctx.path === '/postme') {
         ctx.body = ctx.request.body;
         ctx.set('content-type', ctx.request.header['content-type']);
+        ctx.status = 200;
+        return;
+      }
+      if (ctx.path === '/upload-raw') {
+        // echo the uploaded file contents to the response body
+        ctx.body = fs
+          .readFileSync(ctx.request.body.files.test.path)
+          .toString();
         ctx.status = 200;
         return;
       }
@@ -305,7 +315,7 @@ describe('koa-proxy', function() {
 
   it("pass request body", function(done) {
     var app = new Koa();
-    app.use(convert(parser()));
+    app.use(parser());
     app.use(proxy({ host: "http://localhost:1234" }));
     var server = http.createServer(app.callback());
     request(server)
@@ -319,9 +329,24 @@ describe('koa-proxy', function() {
       });
   });
 
+  it('should pass request as stream', function(done) {
+    var app = new Koa();
+    app.use(proxy({ host: 'http://localhost:1234' }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .post('/upload-raw')
+      .attach('test', path.resolve(__dirname, 'fixtures/upload.txt'))
+      .expect(200)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.text.should.equal('test me');
+        done();
+      });
+  });
+
   it("pass parsed request body", function(done) {
     var app = new Koa();
-    app.use(convert(parser())); // sets ctx.request.body
+    app.use(parser()); // sets ctx.request.body
     app.use(proxy({ host: "http://localhost:1234" }));
     var server = http.createServer(app.callback());
     request(server)
