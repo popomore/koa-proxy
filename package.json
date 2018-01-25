@@ -3,6 +3,7 @@
   "version": "0.9.0",
   "description": "Proxy middleware for koa",
   "main": "index",
+  "types": "index.d.ts",
   "dependencies": {
     "iconv-lite": "^0.2.11",
     "co-request": "^0.2.0"
@@ -13,6 +14,7 @@
     "proxy"
   ],
   "devDependencies": {
+    "@types/koa": "^2.0.43",
     "coveralls": "~2.8.0",
     "istanbul-harmony": "*",
     "koa": "^0.5.2",
