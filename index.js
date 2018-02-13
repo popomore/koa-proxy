@@ -39,7 +39,7 @@ module.exports = function(options) {
         return yield* next;
       }
     }
-    
+
     var parsedBody = getParsedBody(this);
 
     var opt = {
@@ -114,14 +114,12 @@ function resolve(path, options) {
   }
 
   if (typeof options.map === 'object') {
-    if (options.map && options.map[path]) {
-      path = ignoreQuery(options.map[path]);
-    }
+    path = ignoreQuery(options.map[path]);
   } else if (typeof options.map === 'function') {
     path = options.map(path);
   }
 
-  return options.host ? join(options.host, path) : null;
+  return (options.host && path) ? join(options.host, path) : null;
 }
 
 function ignoreQuery(url) {
