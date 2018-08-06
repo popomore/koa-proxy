@@ -1,3 +1,5 @@
+Forked from [popomore/koa-proxy](https://github.com/popomore/koa-proxy)
+
 # koa-proxy [![Build Status](https://travis-ci.org/popomore/koa-proxy.png?branch=master)](https://travis-ci.org/popomore/koa-proxy) [![Coverage Status](https://coveralls.io/repos/popomore/koa-proxy/badge.png?branch=master)](https://coveralls.io/r/popomore/koa-proxy?branch=master)
 
 Proxy middleware for koa
@@ -69,6 +71,16 @@ app.use(proxy({
   match: /^(?!\/dontproxy\.html)/ // ...everything except /dontproxy.html
 }));
 ```
+
+Or you can use match of function style to exclude a specific path.
+```js
+app.use(proxy({
+  host:  'http://alicdn.com',     // proxy alicdn.com...
+  match: function match(path) { return /^(?!\/dontproxy\.html)/.test(path); } // ...everything except /dontproxy.html
+}));
+```
+
+
 
 Proxy won't send cookie to real server, you can set `jar = true` to send it.
 
