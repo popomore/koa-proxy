@@ -28,7 +28,7 @@
     "url": "https://github.com/popomore/koa-proxy"
   },
   "homepage": "https://github.com/popomore/koa-proxy",
-  "author": "popomore <sakura9515@gmail.com>",
+  "author": "popomore <sakura9515@gmail.com>, L1uD0ngq1 <lliudongqi@gmail.com>",
   "license": "MIT",
   "scripts": {
     "test": "make test"
