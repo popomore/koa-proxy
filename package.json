@@ -1,6 +1,6 @@
 {
-  "name": "koa-proxy-b",
-  "version": "0.1.0",
+  "name": "koa-proxy",
+  "version": "0.9.0",
   "description": "Proxy middleware for koa",
   "main": "index",
   "dependencies": {
@@ -28,7 +28,7 @@
     "url": "https://github.com/popomore/koa-proxy"
   },
   "homepage": "https://github.com/popomore/koa-proxy",
-  "author": "popomore <sakura9515@gmail.com>, L1uD0ngq1 <lliudongqi@gmail.com>",
+  "author": "popomore <sakura9515@gmail.com>",
   "license": "MIT",
   "scripts": {
     "test": "make test"

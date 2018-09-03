@@ -37,7 +37,7 @@ module.exports = function(options) {
     if (options.match) {
       var isMatched = false;
       if (typeof options.match === 'function') {
-        isMatched = options.match(options.math);
+        isMatched = options.match(this.path);
       } else {
         isMatched = this.path.match(options.match);
       }
