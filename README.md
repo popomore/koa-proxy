@@ -1,108 +1,71 @@
 # koa-cache-proxy
 
-## Install
+这个项目 fork 自[koa-proxy](https://github.com/popomore/koa-proxy)，在保留原有 api 的基础上拓展了其他功能，原始 api 参考原文档，下文只描述改动的部分
 
+## 安装
+
+```shell
+npm install koa-cache-proxy -S
 ```
-$ npm install koa-cache-proxy -S
-```
 
-## Usage
+## 新特性
 
-When you request http://localhost:3000/index.js, it will fetch http://alicdn.com/index.js and return.
+-  使用 async/await 代替 generate，不再支持低版本 koa2 和 node
+- 增加 hook 功能对某些自定义 url 做响应
+- 增加 cache 功能，可将反向代理的资源缓存在内存中，减少反向代理的次数
+
+## 用例
+
+- hook 功能
 
 ```js
-var koa = require('koa')
-var proxy = require('koa-cache-proxy')
-var app = koa()
+const proxy = require('koa-cache-proxy')
+...
 app.use(
   proxy({
-    host: 'http://alicdn.com',
-  })
+    host: 'https://alicdn.com',
+    match: /^\/example(\/)?/,
+    hooks: [
+      {
+        path: '/example/LfkFyA2UCcsn8NIr', //随便起的一个url
+        handle(ctx) {
+          // do something
+        },
+      },
+    ],
+ })
 )
-app.listen(3000)
+...
 ```
 
-You can proxy a specified url.
+使用 hook 功能, hook 中定义的链接只会在 match 匹配的前提下生效
+
+- cache 功能
 
 ```js
-app.get(
-  'index.js',
-  proxy({
-    url: 'http://alicdn.com/index.js',
-  })
-)
-```
-
-You can specify a key/value object that can map your request's path to the other.
-
-```js
-app.get(
-  'index.js',
-  proxy({
-    host: 'http://alicdn.com',
-    map: {
-      'index.js': 'index-1.js',
-    },
-  })
-)
-```
-
-You can specify a function that can map your request's path to the desired destination.
-
-```js
-app.get(
-  'index.js',
-  proxy({
-    host: 'http://alicdn.com',
-    map: function(path) {
-      return 'public/' + path
-    },
-  })
-)
-```
-
-You can specify match criteria to restrict proxy calls to a given path.
-
-```js
+const proxy = require('koa-cache-proxy')
+...
 app.use(
   proxy({
-    host: 'http://alicdn.com', // proxy alicdn.com...
-    match: /^\/static\//, // ...just the /static folder
-  })
+    host: 'https://alicdn.com',
+    match: /^\/example(\/)?/,
+    cache: true //缓存所有，
+    // cache: /\.html$/ 缓存所有html结尾文件
+    // cache(path) { return false } 动态决定是否缓存
+ })
 )
+...
 ```
 
-Or you can use match to exclude a specific path.
+cache 缓存时会连同 response header 也一并缓存
 
-```js
-app.use(
-  proxy({
-    host: 'http://alicdn.com', // proxy alicdn.com...
-    match: /^(?!\/dontproxy\.html)/, // ...everything except /dontproxy.html
-  })
-)
-```
+## 新增属性
 
-Proxy won't send cookie to real server, you can set `jar = true` to send it.
+使用此插件，在 koa 的 ctx 中将新增以下属性
 
-```js
-app.use(
-  proxy({
-    jar: true,
-  })
-)
-```
+- ctx.isCacheable
 
-Proxy won't send 'foo' and 'bar' headers to real server, or recieve 'jar-jar' from real server.
-
-```js
-app.use(
-  proxy({
-    suppressRequestHeaders: ['foo', 'bar'], // case-insensitive
-    suppressResponseHeaders: ['jar-jar'], // case-insensitive
-  })
-)
-```
+ctx.path 是否符合缓存规则
 
 ## LICENSE
 
