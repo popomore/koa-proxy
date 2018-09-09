@@ -1,6 +1,6 @@
 {
   "name": "@kitten-team/koa-cache-proxy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Proxy middleware for koa",
   "main": "index.js",
   "scripts": {
