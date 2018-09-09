@@ -30,7 +30,7 @@ select VERSION in patch minor major "Specific Version"
 
         # npm release
         npm whoami --registry http://registry.npmjs.org
-        npm publish --registry http://registry.npmjs.org
+        npm publish --access public --registry http://registry.npmjs.org
         echo "✅ Released to npm."
 
         # github release
