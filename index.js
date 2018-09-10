@@ -57,15 +57,10 @@ module.exports = function(options = {}) {
         isCacheable = !!isCacheable(ctx.path)
       }
       if (isCacheable) {
-        const content = lruCache.get(ctx.path)
-        if (content) {
-          ctx.body = content
-          if (options.yieldNext) {
-            await next()
-          }
-          return
-        } else {
-          ctx.proxyIsCacheable = true
+        ctx.proxyIsCacheable = true
+        const cacheResponse = lruCache.get(ctx.path)
+        if (cacheResponse) {
+          ctx.proxyCacheResponse = cacheResponse
         }
       }
     }
@@ -108,11 +103,25 @@ module.exports = function(options = {}) {
       }
     }
 
-    const res = await requestPromise(opt).catch(error => {
-      if (error.statusCode === 304) return { statusCode: 304, headers: {} }
-      return Promise.reject(error)
-    })
+    const res = ctx.proxyCacheResponse
+      ? ctx.proxyCacheResponse
+      : await requestPromise(opt).catch(error => {
+        const { statusCode } = error
+        if (statusCode === 304 || statusCode === 404) {
+          return Promise.resolve({ statusCode, headers: {} })
+        }
+        return Promise.reject(error)
+      })
     ctx.status = res.statusCode
+    if (ctx.proxyIsCacheable && !ctx.proxyCacheResponse) {
+      if (res.body && res.statusCode === 200) {
+        lruCache.set(ctx.path, {
+          body: res.body,
+          statusCode: res.statusCode,
+          headers: res.headers
+        })
+      }
+    }
     for (const name in res.headers) {
       // http://stackoverflow.com/questions/35525715/http-get-parse-error-code-hpe-unexpected-content-length
       if (suppressResponseHeaders.indexOf(name.toLowerCase()) >= 0) {
@@ -128,16 +137,11 @@ module.exports = function(options = {}) {
       ctx.body = iconv.decode(res.body, 'gbk')
       return
     }
-    if (Buffer.isBuffer(res.body)) {
-      ctx.body = res.body.toString()
-    } else {
+
+    if (res.body) {
       ctx.body = res.body
     }
-    if (ctx.proxyIsCacheable) {
-      if (ctx.body && ctx.status === 200) {
-        lruCache.set(ctx.path, ctx.body)
-      }
-    }
+
     if (options.yieldNext) {
       return next()
     }
