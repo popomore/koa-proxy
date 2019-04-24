@@ -1,3 +1,5 @@
+# koa-proxy is been transfered to [edorivai](https://www.npmjs.com/~edorivai)
+
 # koa-proxy [![Build Status](https://travis-ci.org/popomore/koa-proxy.png?branch=master)](https://travis-ci.org/popomore/koa-proxy) [![Coverage Status](https://coveralls.io/repos/popomore/koa-proxy/badge.png?branch=master)](https://coveralls.io/r/popomore/koa-proxy?branch=master)
 
 Proxy middleware for koa
