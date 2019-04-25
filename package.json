@@ -5,7 +5,9 @@
   "main": "index",
   "dependencies": {
     "iconv-lite": "^0.2.11",
-    "co-request": "^0.2.0"
+    "pause-stream": "0.0.11",
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5"
   },
   "keywords": [
     "koa",
@@ -14,14 +16,15 @@
   ],
   "devDependencies": {
     "coveralls": "~2.8.0",
-    "istanbul-harmony": "*",
-    "koa": "^0.5.2",
-    "koa-body-parser": "^1.1.2",
-    "koa-router": "^3.1.2",
-    "koa-static": "^1.4.3",
-    "mocha": "~1.17.1",
-    "should": "~3.1.3",
-    "supertest": "^0.10.0"
+    "istanbul": "^1.1.0-alpha.1",
+    "koa": "^2.3.0",
+    "koa-body": "^2.5.0",
+    "koa-convert": "^1.2.0",
+    "koa-router": "^7.2.1",
+    "koa-static": "^4.0.1",
+    "mocha": "^4.0.1",
+    "should": "^13.1.2",
+    "supertest": "^3.0.0"
   },
   "repository": {
     "type": "git",
