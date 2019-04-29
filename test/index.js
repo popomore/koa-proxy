@@ -277,24 +277,6 @@ describe('koa-proxy', function() {
     }.should.throw());
   });
 
-  xit("encoding", function(done) {
-    var app = new Koa();
-    app.use(proxy({
-        url: "http://localhost:1234/index.html",
-        encoding: "gbk"
-      }));
-    var server = http.createServer(app.callback());
-    request(server)
-      .get("/index.js")
-      .expect(200)
-      .expect("Content-Type", "text/html; charset=utf-8")
-      .end(function(err, res) {
-        if (err) return done(err);
-        res.text.should.startWith("<div>中国</div>");
-        done();
-      });
-  });
-
   it("pass query", function(done) {
     var app = new Koa();
     app.use(proxy({
@@ -373,16 +355,13 @@ describe('koa-proxy', function() {
     var app = new Koa();
     app.use(proxy({
         url: "http://localhost:1234/class.js",
-        requestOptions: { timeout: 1 }
+        requestOptions: {
+          url: 'http://localhost:12345/class.js' // change port, should yield 500
+        }
       }));
     var server = http.createServer(app.callback());
     request(server)
       .get("/index.js")
-      .expect(function sleep() {
-        // Using the custom assert function to make sure we get a timeout
-        var sleepTime = new Date().getTime() + 3;
-        while (new Date().getTime() < sleepTime) {}
-      })
       .expect(500, done);
   });
 
@@ -391,18 +370,13 @@ describe('koa-proxy', function() {
     app.use(proxy({
       url: 'http://localhost:1234/class.js',
       requestOptions: function(req, opt) {
-        opt.timeout = 1;
+        opt.url = 'http://localhost:12345/class.js'; // change port, should yield 500
         return opt;
       }
     }));
     var server = http.createServer(app.callback());
     request(server)
       .get('/index.js')
-      .expect(function sleep() {
-        // Using the custom assert function to make sure we get a timeout
-        var sleepTime = new Date().getTime() + 3;
-        while(new Date().getTime() < sleepTime) {}
-      })
       .expect(500, done);
   });
 
