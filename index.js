@@ -2,7 +2,6 @@
 
 var Stream = require('stream');
 var join = require('url').resolve;
-var iconv = require('iconv-lite');
 var rp = require('request-promise-native');
 var requestLib = require('request');
 var pauseStream = require('pause-stream');
@@ -97,11 +96,6 @@ module.exports = function(options) {
       }
       ctx.set(name, res.headers[name]);
     }
-
-    // if (options.encoding === "gbk") {
-    //   ctx.body = iconv.decode(res.body, "gbk");
-    //   return;
-    // }
 
     ctx.body = ctx.body || res.body;
     ctx.status = res.statusCode;

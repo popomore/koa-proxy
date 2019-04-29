@@ -4,7 +4,6 @@
   "description": "Proxy middleware for koa",
   "main": "index",
   "dependencies": {
-    "iconv-lite": "^0.2.11",
     "pause-stream": "0.0.11",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5"
@@ -15,8 +14,6 @@
     "proxy"
   ],
   "devDependencies": {
-    "coveralls": "~2.8.0",
-    "istanbul": "^1.1.0-alpha.1",
     "koa": "^2.3.0",
     "koa-body": "^2.5.0",
     "koa-convert": "^1.2.0",
@@ -34,6 +31,6 @@
   "author": "popomore <sakura9515@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "make test"
+    "test": "mocha -t 20000"
   }
 }
