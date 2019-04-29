@@ -18,10 +18,13 @@
     "koa-body": "^2.5.0",
     "koa-convert": "^1.2.0",
     "koa-router": "^7.2.1",
-    "koa-static": "^4.0.1",
+    "koa-static": "^5.0.0",
     "mocha": "^4.0.1",
     "should": "^13.1.2",
     "supertest": "^3.0.0"
+  },
+  "peerDependencies": {
+    "koa": ">2"
   },
   "repository": {
     "type": "git",
