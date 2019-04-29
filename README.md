@@ -1,4 +1,4 @@
-# koa-proxy [![Build Status](https://travis-ci.org/popomore/koa-proxy.png?branch=master)](https://travis-ci.org/popomore/koa-proxy) [![Coverage Status](https://coveralls.io/repos/popomore/koa-proxy/badge.png?branch=master)](https://coveralls.io/r/popomore/koa-proxy?branch=master)
+# koa-proxy [![Build Status](https://travis-ci.com/edorivai/koa-proxy.svg?branch=master)](https://travis-ci.com/edorivai/koa-proxy)
 
 Proxy middleware for koa
 

@@ -25,10 +25,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/popomore/koa-proxy"
+    "url": "https://github.com/edorivai/koa-proxy"
   },
-  "homepage": "https://github.com/popomore/koa-proxy",
-  "author": "popomore <sakura9515@gmail.com>",
+  "homepage": "https://github.com/edorivai/koa-proxy",
+  "author": "edorivai <edo.rivai@gmail.com>",
   "license": "MIT",
   "scripts": {
     "test": "mocha -t 20000"
