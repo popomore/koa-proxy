@@ -58,7 +58,15 @@ module.exports = function(options) {
       if (typeof options.requestOptions === 'function') {
         opt = options.requestOptions(this.request, opt);
       } else {
-        Object.keys(options.requestOptions).forEach(function (option) { opt[option] = options.requestOptions[option]; });
+        Object.keys(options.requestOptions).forEach(
+          function (option) {
+            if (option != 'headers') {
+              opt[option] = options.requestOptions[option];
+            } else {
+              Object.assign(opt['headers'], options.requestOptions['headers'])
+            }
+          }
+        );
       }
     }
 
