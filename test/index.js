@@ -60,6 +60,13 @@ describe('koa-proxy', function() {
         ctx.status = 200;
         return;
       }
+      if (ctx.path === '/override-my-headers') {
+        let headers = ctx.request.header;
+        ctx.set('existing-test-header', 'cows');
+        ctx.body = headers;
+        ctx.status = 200;
+        return;
+      }
       if (ctx.querystring) {
         // To test query string
         ctx.body = ctx.querystring;
@@ -493,4 +500,39 @@ describe('koa-proxy', function() {
         });
     });
   });
+
+  describe('with overridden response header', function () {
+    const app = new Koa();
+    app.use(proxy({
+      host: 'http://localhost:1234',
+      overrideResponseHeaders: {
+        "existing-test-header" : "goats",
+        "nonexisting-test-header" : "bar"
+      }
+    }));
+    const server = http.createServer(app.callback());
+    const agent = request.agent(server);
+
+
+    it('should include overriden header', function(done){
+
+      agent
+        .get("/override-my-headers")
+        .expect(200)
+        .end(function(err, res){
+          if (err)
+            return done(err);
+
+          if(!res.headers.hasOwnProperty('nonexisting-test-header') || res.headers['nonexisting-test-header'] !== 'bar'){
+            throw new Error("overridden nonexisting-test-header header not present")
+          }
+          if(!res.headers.hasOwnProperty('existing-test-header') || res.headers['existing-test-header'] !== 'goats'){
+            throw new Error("overridden existing-test-header header not present")
+          }
+          done();
+        })
+    })
+
+
+  })
 });

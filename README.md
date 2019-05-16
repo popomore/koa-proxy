@@ -87,6 +87,16 @@ app.use(proxy({
 }));
 ```
 
+You can also add new headers to your response or override existing ones
+```js
+app.use(proxy({
+  overrideResponseHeaders: {
+    "cow": "moo",
+    "duck": "quack"
+    }, 
+}));
+```
+
 ## LICENSE
 
 Copyright (c) 2014 popomore. Licensed under the MIT license.

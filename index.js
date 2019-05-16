@@ -97,6 +97,12 @@ module.exports = function(options) {
       ctx.set(name, res.headers[name]);
     }
 
+    if(options.overrideResponseHeaders) {
+      for (let headerKey in options.overrideResponseHeaders) {
+        ctx.set(headerKey, options.overrideResponseHeaders[headerKey]);
+      }
+    }
+
     ctx.body = ctx.body || res.body;
     ctx.status = res.statusCode;
 
