@@ -35,11 +35,17 @@ module.exports = function(options) {
 
     // if match option supplied, restrict proxy to that match
     if (options.match) {
-      if (!this.path.match(options.match)) {
+      var isMatched = false;
+      if (typeof options.match === 'function') {
+        isMatched = options.match(this.path);
+      } else {
+        isMatched = this.path.match(options.match);
+      }
+      if (!isMatched) {
         return yield* next;
       }
     }
-    
+
     var parsedBody = getParsedBody(this);
 
     var opt = {

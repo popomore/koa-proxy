@@ -72,6 +72,16 @@ app.use(proxy({
 }));
 ```
 
+Or you can use match of function style to exclude a specific path.
+```js
+app.use(proxy({
+  host:  'http://alicdn.com',     // proxy alicdn.com...
+  match: function match(path) { return /^(?!\/dontproxy\.html)/.test(path); } // ...everything except /dontproxy.html
+}));
+```
+
+
+
 Proxy won't send cookie to real server, you can set `jar = true` to send it.
 
 ```js
