@@ -8,7 +8,7 @@ var proxy = require('..');
 var request = require('supertest');
 var Koa = require('koa');
 var serve = require('koa-static');
-var convert = require('koa-convert')
+var convert = require('koa-convert');
 var Router = require('koa-router');
 var parser = require('koa-body');
 
