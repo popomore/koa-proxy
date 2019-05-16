@@ -71,7 +71,7 @@ module.exports = function(options) {
       }
     }
 
-    for (name in opt.headers) {
+    for (let name in opt.headers) {
       if (
         options.suppressRequestHeaders &&
         options.suppressRequestHeaders.indexOf(name.toLowerCase()) >= 0
