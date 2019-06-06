@@ -71,7 +71,7 @@ module.exports = function(options) {
       }
     }
 
-    for (name in opt.headers) {
+    for (let name in opt.headers) {
       if (
         options.suppressRequestHeaders &&
         options.suppressRequestHeaders.indexOf(name.toLowerCase()) >= 0
@@ -95,6 +95,12 @@ module.exports = function(options) {
         continue;
       }
       ctx.set(name, res.headers[name]);
+    }
+
+    if(options.overrideResponseHeaders) {
+      for (let headerKey in options.overrideResponseHeaders) {
+        ctx.set(headerKey, options.overrideResponseHeaders[headerKey]);
+      }
     }
 
     ctx.body = ctx.body || res.body;
