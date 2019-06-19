@@ -141,6 +141,43 @@ describe('koa-proxy', function() {
       });
   });
 
+  it('should work with option host as function', function(done) {
+    var app = koa();
+    app.use(proxy({
+      host: function() {return 'http://localhost:1234/'}
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .get('/class.js')
+      .expect(200)
+      .expect('Host', 'localhost:1234')
+      .end(function (err, res) {
+        if (err)
+          return done(err);
+        res.text.should.startWith('define("arale/class/1.0.0/class"');
+        done();
+      });
+  });
+
+  it('should pass request to host as function', function(done) {
+    var app = koa();
+    app.use(proxy({
+      host: function(req) {return req.header['x-host']}
+    }));
+    var server = http.createServer(app.callback());
+    request(server)
+      .get('/class.js')
+      .set('x-host', 'http://localhost:1234/')
+      .expect(200)
+      .expect('Host', 'localhost:1234')
+      .end(function (err, res) {
+        if (err)
+          return done(err);
+        res.text.should.startWith('define("arale/class/1.0.0/class"');
+        done();
+      });
+  });
+
   it('should have option host and map', function(done) {
     var app = koa();
     app.use(proxy({

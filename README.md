@@ -89,6 +89,13 @@ app.use(proxy({
 }));
 ```
 
+You can use function to make host dependent on request
+
+```js
+app.use(proxy({
+  host: (req) => req.header['x-host']
+}));
+```
 ## LICENSE
 
 Copyright (c) 2014 popomore. Licensed under the MIT license.
