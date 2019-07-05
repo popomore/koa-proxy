@@ -70,7 +70,7 @@ app.use(proxy({
 }));
 ```
 
-Proxy won't send cookie to real server, you can set `jar = true` to send it.
+You can configure proxy to remember cookies for future use by setting `jar = true`. This means cookies set by server will be stored and resent in subsequent requests. For me info see the documentation for [request](https://github.com/request/request).
 
 ```js
 app.use(proxy({
